@@ -66,6 +66,8 @@ const authUserValidation = async (req: any, res:any, next:any) => {
       const error = new Error('La contraseña introducida es incorrecta');
       return res.status(400).json({ msg: error.message });
     }
+
+    req.user = userRegistered;
   } catch (e) {
     res.status(400).json({ e });
   }

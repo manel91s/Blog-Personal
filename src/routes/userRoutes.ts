@@ -1,10 +1,9 @@
 import express from 'express';
 import { body } from 'express-validator';
-import dotenv from 'dotenv';
+
 import UserService from '../services/UserService';
 import { userValidation, validateToken, authUserValidation } from '../utils/Validators';
-
-dotenv.config();
+import { generateJWT } from '../utils/generator';
 
 const router = express.Router();
 
@@ -61,8 +60,17 @@ router.post(
   [body('email').isEmail().withMessage('El campo email debe de estar correctamente informado'),
     body('password').isLength({ min: 8, max: 16 }).withMessage('El campo password tiene que tener entre 8 y 16 caracteres')],
   authUserValidation,
-  async (req: express.Request, res: express.Response) => {
-    const { email } = req.body;
+  async (req: any, res: express.Response) => {
+    const {
+      _id, name, email,
+    } = req.user;
+
+    return res.json({
+      _id,
+      name,
+      email,
+      token: generateJWT(_id),
+    });
   },
 );
 

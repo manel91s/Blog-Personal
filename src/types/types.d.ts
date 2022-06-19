@@ -1,3 +1,5 @@
+import { Express } from 'express';
+
 export interface infoMailer {
     email: string;
     confirmURL: string;

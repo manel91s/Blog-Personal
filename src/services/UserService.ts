@@ -1,7 +1,7 @@
 import User from '../models/User';
 import Mailer from '../models/Mailer';
 import { IUser, infoMailer } from '../types/types';
-import generateId from '../utils/generator';
+import { generateId } from '../utils/generator';
 
 export default class UserService {
   private userRecord! : IUser | any;
@@ -30,7 +30,19 @@ export default class UserService {
     await User.findOneAndUpdate({ token }, update);
   }
 
+  async getUser(email: string) {
+    const user = await User.findOne({ email });
+
+    return user;
+  }
+
   async sendToken(data: infoMailer) {
     this.mailer.sendToken(data);
+  }
+
+  async checkPassword(email:string, password: string) {
+    const userRegistered = await User.findOne({ email });
+
+    return userRegistered?.checkPassword(password);
   }
 }
