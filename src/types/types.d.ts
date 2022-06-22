@@ -20,3 +20,12 @@ export interface IUser {
     id_rol: number;
 
 }
+
+export interface IPost {
+    title: string,
+    body: string,
+    slug: string,
+    public: boolean,
+    id_user: number,
+    id_category: number
+}
