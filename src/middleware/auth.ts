@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import express from 'express';
 import dotenv from 'dotenv';
 import User from '../models/User';
+import { jwtIdPayload } from '../types/types';
 
 dotenv.config();
 
@@ -13,9 +14,9 @@ const checkAuth = async (req: any, res: express.Response, next: () => void) => {
       // eslint-disable-next-line prefer-destructuring
       token = req.headers.authorization.split(' ')[1];
 
-      const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`);
+      const { id } = jwt.verify(token, `${process.env.JWT_SECRET}`) as jwtIdPayload;
 
-      req.usuario = await User.findById(decoded.id).select('-password -confirmado -token -createdAt -updatedAt');
+      req.user = await User.findById(id).select('-password -confirmado -token -createdAt -updatedAt');
 
       return next();
     } catch (error) {

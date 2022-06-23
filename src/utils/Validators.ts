@@ -2,14 +2,26 @@ import { validationResult } from 'express-validator';
 
 import User from '../models/User';
 
-const userValidation = async (req: any, res:any, next:any) => {
-  const { email } = req.body;
+const getValidationResult = async (req: any, res:any, next:any) => validationResult(req);
 
-  const errors = validationResult(req);
+const validateParams = async (req: any, res:any, next:any) => {
+  const errors = await getValidationResult(req, res, next);
+  console.log(errors);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  return next();
+};
+
+const userValidation = async (req: any, res:any, next:any) => {
+  const errors = await getValidationResult(req, res, next);
 
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
+
+  const { email } = req.body;
 
   try {
     const userRegistered = await User.findOne({ email });
@@ -44,7 +56,7 @@ const validateToken = async (req: any, res:any, next:any) => {
 const authUserValidation = async (req: any, res:any, next:any) => {
   const { email, password } = req.body;
 
-  const errors = validationResult(req);
+  const errors = await getValidationResult(req, res, next);
 
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -76,4 +88,6 @@ const authUserValidation = async (req: any, res:any, next:any) => {
   return next();
 };
 
-export { userValidation, validateToken, authUserValidation };
+export {
+  validateParams, userValidation, validateToken, authUserValidation,
+};

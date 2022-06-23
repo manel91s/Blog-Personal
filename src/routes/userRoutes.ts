@@ -1,6 +1,5 @@
 import express from 'express';
 import { body } from 'express-validator';
-import multer from 'multer';
 import UserService from '../services/UserService';
 import { userValidation, validateToken, authUserValidation } from '../utils/Validators';
 import { generateJWT } from '../utils/generator';
@@ -19,7 +18,7 @@ router.post(
   body('password').isLength({ min: 8, max: 16 }).withMessage('El campo password tiene que tener entre 8 y 16 caracteres'),
   ],
   userValidation,
-  uploader.uploadSingleImage('avatar'),
+  uploader.uploadSingleImage('avatar', 'photo'),
   async (req: express.Request, res: express.Response) => {
     try {
       const userDTO = req.body;

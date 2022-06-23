@@ -3,7 +3,7 @@ import Mailer from '../models/Mailer';
 import { IUser, infoMailer } from '../types/types';
 import { generateId } from '../utils/generator';
 
-export default class UserService {
+class UserService {
   private userRecord! : IUser | any;
 
   private mailer;
@@ -17,9 +17,9 @@ export default class UserService {
 
     this.userRecord.token = generateId();
 
-    await this.userRecord.save();
+    const user = await this.userRecord.save();
 
-    return { user: this.userRecord };
+    return { user };
   }
 
   async updateToken(token: string) {
@@ -46,3 +46,5 @@ export default class UserService {
     return userRegistered?.checkPassword(password);
   }
 }
+
+export default UserService;

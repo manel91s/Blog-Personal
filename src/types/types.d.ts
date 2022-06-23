@@ -1,4 +1,5 @@
 import { Express } from 'express';
+import { JwtPayload } from 'jsonwebtoken';
 
 export interface infoMailer {
     email: string;
@@ -25,7 +26,12 @@ export interface IPost {
     title: string,
     body: string,
     slug: string,
+    image: string,
     public: boolean,
     id_user: number,
     id_category: number
 }
+
+export interface jwtIdPayload extends JwtPayload{
+    id: string
+  }
