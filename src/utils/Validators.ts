@@ -7,7 +7,7 @@ const getValidationResult = async (req: any, res:any, next:any) => validationRes
 
 const validateParams = async (req: any, res:any, next:any) => {
   const errors = await getValidationResult(req, res, next);
-  console.log(errors);
+
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }

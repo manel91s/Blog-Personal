@@ -17,7 +17,21 @@ router.get('/', checkAuth, async (req: any, res: express.Response) => {
 
     return res.status(200).json({ posts });
   } catch (e) {
-    console.log(e);
+    res.status(400).json({ e });
+  }
+});
+
+router.get('/:slug', checkAuth, async (req: any, res: express.Response) => {
+  try {
+    const { slug } = req.params;
+
+    const postService = new PostService();
+
+    const post = await postService.get(slug);
+
+    return res.status(200).json({ post });
+  } catch (e) {
+    res.status(400).json({ e });
   }
 });
 
@@ -42,7 +56,7 @@ router.post(
 
       return res.status(200).json({ post });
     } catch (e) {
-      console.log(e);
+      res.status(400).json({ e });
     }
   },
 );
@@ -71,7 +85,7 @@ router.put(
 
       return res.status(200).json({ post });
     } catch (e) {
-      console.log(e);
+      res.status(400).json({ e });
     }
   },
 );
