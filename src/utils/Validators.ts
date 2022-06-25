@@ -1,4 +1,5 @@
 import { validationResult } from 'express-validator';
+import Post from '../models/Post';
 
 import User from '../models/User';
 
@@ -88,6 +89,26 @@ const authUserValidation = async (req: any, res:any, next:any) => {
   return next();
 };
 
+const canUpdatePost = async (req:any, res: any, next:any) => {
+  const { slug } = req.body;
+  const { _id } = req.user;
+  const post = await Post.findOne({ slug });
+
+  if (!post) {
+    const error = new Error('Esta publicación no existe');
+    return res.status(400).json({ msg: error.message });
+  }
+
+  if (post?.id_user.toString() !== _id.toString()) {
+    const error = new Error('Este usuario no es propietario de esta publicación');
+    return res.status(401).json({ msg: error.message });
+  }
+
+  req.post = post;
+
+  return next();
+};
+
 export {
-  validateParams, userValidation, validateToken, authUserValidation,
+  validateParams, userValidation, validateToken, authUserValidation, canUpdatePost,
 };
