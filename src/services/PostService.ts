@@ -6,7 +6,7 @@ class PostService {
 
   private posts: IPost | any;
 
-  async save(postDTO: IPost) {
+  public async save(postDTO: IPost) {
     this.post = new Post(postDTO);
 
     const post = await this.post.save();
@@ -14,17 +14,17 @@ class PostService {
     return { post };
   }
 
-  async update(post: IPost) {
+  public async update(post: IPost) {
     post.save();
   }
 
-  async getAll() {
+  public async getAll() {
     this.posts = await Post.find({}).sort({ _id: 'desc' }).populate('id_user');
 
     return this.posts;
   }
 
-  async get(slug : string) {
+  public async get(slug : string) {
     this.post = await Post.findOne({ slug });
 
     return this.post;

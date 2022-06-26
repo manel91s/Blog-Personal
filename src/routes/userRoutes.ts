@@ -38,7 +38,7 @@ router.post(
 
       await userService.sendToken({
         email: user.email,
-        confirmURL: `http://${req.hostname}/user/confirm/${user.token}`,
+        confirmURL: `http://${req.hostname}/users/confirm/${user.token}`,
       });
 
       return res.status(200).json({ msg: 'Se ha enviado un email de confirmación' });
@@ -107,7 +107,7 @@ router.get(
 
 router.post(
   '/forgot-password',
-  [body('email').isEmail().withMessage('El campo email debe de estar correctamente informado'),
+  [body('email').isEmail().withMessage('El campo email debe de estar correctamente informado')],
   validateParams,
   async (req: express.Request, res: express.Response) => {
     try {
@@ -125,10 +125,44 @@ router.post(
 
       await userService.sendToken({
         email: user.email,
-        confirmURL: `http://${req.hostname}/user/forgot-password/${user.token}`,
+        confirmURL: `http://${req.hostname}/users/forgot-password/${user.token}`,
       });
 
       return res.status(200).json({ msg: 'Se ha enviado un email de confirmación' });
+    } catch (e) {
+      return res.status(400).json({ msg: e });
+    }
+  },
+);
+
+router.patch(
+  '/restore-password',
+  [body('newPassword').isLength({ min: 8, max: 16 }).withMessage('El campo password tiene que tener entre 8 y 16 caracteres'),
+    body('passwordConfirmation').custom((value, { req }) => {
+      if (value !== req.body.newPassword) {
+        throw new Error('La contraseña de confirmación es incorrecta');
+      }
+      return true;
+    })],
+  validateParams,
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const { token, newPassword } = req.body;
+
+      const userService = new UserService();
+
+      const user = await userService.verify(token);
+
+      if (!user) {
+        const error = new Error('No se pudo restablecer la contraseña');
+        return res.status(400).json({ msg: error.message });
+      }
+      await userService.updateToken(token);
+
+      user.password = newPassword;
+      userService.update(user);
+
+      return res.status(200).json({ msg: 'Usuario actualizado' });
     } catch (e) {
       return res.status(400).json({ msg: e });
     }

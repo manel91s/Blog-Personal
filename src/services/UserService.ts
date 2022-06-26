@@ -14,7 +14,7 @@ class UserService {
     this.mailer = new Mailer();
   }
 
-  async register(userDTO : IUser) {
+  public async register(userDTO : IUser) {
     this.userRecord = new User(userDTO);
 
     this.userRecord.token = generateId();
@@ -24,36 +24,49 @@ class UserService {
     return { user };
   }
 
-  async generateToken() {
+  public async generateToken() {
     this.user.confirm = false;
     this.user.token = generateId();
     // eslint-disable-next-line no-return-await
     return await this.user.save();
   }
 
-  async update(user: IUser) {
+  public async update(user: IUser) {
     user.save();
   }
 
-  async updateToken(token: string) {
+  public async updateToken(token: string) {
     const update = {
       confirm: true,
       token: '',
     };
-    await User.findOneAndUpdate({ token }, update);
+    // Actualizamos si user no está en memoria
+    if (!this.user) {
+      return await User.findOneAndUpdate({ token }, update);
+    }
+
+    this.user.confirm = update.confirm;
+    this.user.token = update.token;
+    this.user.update();
   }
 
-  async getUser(email: string) {
+  public async getUser(email: string) {
     this.user = await User.findOne({ email });
 
     return this.user;
   }
 
-  async sendToken(data: infoMailer) {
+  public async verify(token: string) {
+    this.user = await User.findOne({ token });
+
+    return this.user;
+  }
+
+  public async sendToken(data: infoMailer) {
     this.mailer.sendToken(data);
   }
 
-  async checkPassword(email:string, password: string) {
+  public async checkPassword(email:string, password: string) {
     const userRegistered = await User.findOne({ email });
 
     return userRegistered?.checkPassword(password);
