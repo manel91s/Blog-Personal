@@ -6,6 +6,8 @@ import { generateId } from '../utils/generator';
 class UserService {
   private userRecord! : IUser | any;
 
+  private user : IUser | any;
+
   private mailer;
 
   constructor() {
@@ -22,6 +24,13 @@ class UserService {
     return { user };
   }
 
+  async generateToken() {
+    this.user.confirm = false;
+    this.user.token = generateId();
+    // eslint-disable-next-line no-return-await
+    return await this.user.save();
+  }
+
   async update(user: IUser) {
     user.save();
   }
@@ -35,9 +44,9 @@ class UserService {
   }
 
   async getUser(email: string) {
-    const user = await User.findOne({ email });
+    this.user = await User.findOne({ email });
 
-    return user;
+    return this.user;
   }
 
   async sendToken(data: infoMailer) {

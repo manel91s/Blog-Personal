@@ -1,5 +1,6 @@
 import express from 'express';
 import { body } from 'express-validator';
+import e from 'express';
 import UserService from '../services/UserService';
 import checkAuth from '../middleware/auth';
 import {
@@ -41,7 +42,7 @@ router.post(
         confirmURL: `http://${req.hostname}/user/confirm/${user.token}`,
       });
 
-      return res.status(200).json({ user });
+      return res.status(200).json({ msg: 'Se ha enviado un email de confirmación' });
     } catch (e) {
       return res.status(400).json({ msg: e });
     }
@@ -101,6 +102,34 @@ router.get(
       return res.status(200).json({ msg: 'Tu usuario ha sido confirmado' });
     } catch (e) {
       return res.status(400).json({ msg: e });
+    }
+  },
+);
+
+router.post(
+  '/forgot-password',
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const { email } = req.body;
+
+      const userService = new UserService();
+
+      const user = await userService.getUser(email);
+
+      if (!user) {
+        const error = new Error('El email no existe en la base de datos');
+        return res.status(400).json({ msg: error.message });
+      }
+      await userService.generateToken();
+
+      await userService.sendToken({
+        email: user.email,
+        confirmURL: `http://${req.hostname}/user/forgot-password/${user.token}`,
+      });
+
+      return res.status(200).json({ msg: 'Se ha enviado un email de confirmación' });
+    } catch (err) {
+      return res.status(400).json({ msg: err });
     }
   },
 );

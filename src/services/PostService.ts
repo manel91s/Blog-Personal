@@ -15,7 +15,7 @@ class PostService {
   }
 
   async update(post: IPost) {
-    post.update();
+    post.save();
   }
 
   async getAll() {
