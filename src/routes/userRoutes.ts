@@ -1,7 +1,10 @@
 import express from 'express';
 import { body } from 'express-validator';
 import UserService from '../services/UserService';
-import { userValidation, validateToken, authUserValidation } from '../utils/Validators';
+import checkAuth from '../middleware/auth';
+import {
+  userValidation, validateToken, authUserValidation, validateParams,
+} from '../utils/Validators';
 import { generateJWT } from '../utils/generator';
 import Uploader from '../middleware/uploader';
 
@@ -16,6 +19,12 @@ router.post(
     .escape(),
   body('email').isEmail().withMessage('El campo email debe de estar correctamente informado'),
   body('password').isLength({ min: 8, max: 16 }).withMessage('El campo password tiene que tener entre 8 y 16 caracteres'),
+  body('passwordConfirmation').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('La contraseña de confirmación es incorrecta');
+    }
+    return true;
+  }),
   ],
   userValidation,
   uploader.uploadSingleImage('avatar', 'photo'),
@@ -33,6 +42,45 @@ router.post(
       });
 
       return res.status(200).json({ user });
+    } catch (e) {
+      return res.status(400).json({ msg: e });
+    }
+  },
+);
+
+router.put(
+  '/update',
+  checkAuth,
+  [body('name').notEmpty().trim().withMessage('El nombre no puede estar vacio')
+    .escape(),
+  body('surname').notEmpty().trim().withMessage('El apellido no puede estar vacio')
+    .escape(),
+  body('password').isLength({ min: 8, max: 16 }).withMessage('El campo password tiene que tener entre 8 y 16 caracteres'),
+  body('newPassword').isLength({ min: 8, max: 16 }).withMessage('El campo password tiene que tener entre 8 y 16 caracteres'),
+  body('passwordConfirmation').custom((value, { req }) => {
+    if (value !== req.body.newPassword) {
+      throw new Error('La contraseña de confirmación es incorrecta');
+    }
+    return true;
+  }),
+  ],
+  authUserValidation,
+  uploader.uploadSingleImage('avatar', 'photo'),
+  async (req: any, res: express.Response) => {
+    try {
+      const { user } = req;
+      const { name, surname, newPassword } = req.body;
+
+      user.name = name;
+      user.surname = surname;
+      if (newPassword) {
+        user.password = newPassword;
+      }
+
+      const userService = new UserService();
+      userService.update(user);
+
+      return res.status(200).json({ msg: 'Usuario actualizado correctamente' });
     } catch (e) {
       return res.status(400).json({ msg: e });
     }

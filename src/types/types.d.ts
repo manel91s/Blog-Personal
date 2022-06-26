@@ -6,6 +6,7 @@ export interface infoMailer {
 }
 
 export interface IUser {
+    update();
     mailer: any;
     save();
     checkPassword(password: string);

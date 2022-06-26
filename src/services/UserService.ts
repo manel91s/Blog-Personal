@@ -1,5 +1,5 @@
 import User from '../models/User';
-import Mailer from '../models/Mailer';
+import Mailer from './Mailer';
 import { IUser, infoMailer } from '../types/types';
 import { generateId } from '../utils/generator';
 
@@ -20,6 +20,10 @@ class UserService {
     const user = await this.userRecord.save();
 
     return { user };
+  }
+
+  async update(user: IUser) {
+    user.save();
   }
 
   async updateToken(token: string) {
