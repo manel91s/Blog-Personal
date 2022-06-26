@@ -1,6 +1,5 @@
 import express from 'express';
 import { body } from 'express-validator';
-import e from 'express';
 import UserService from '../services/UserService';
 import checkAuth from '../middleware/auth';
 import {
@@ -108,6 +107,8 @@ router.get(
 
 router.post(
   '/forgot-password',
+  [body('email').isEmail().withMessage('El campo email debe de estar correctamente informado'),
+  validateParams,
   async (req: express.Request, res: express.Response) => {
     try {
       const { email } = req.body;
@@ -128,8 +129,8 @@ router.post(
       });
 
       return res.status(200).json({ msg: 'Se ha enviado un email de confirmación' });
-    } catch (err) {
-      return res.status(400).json({ msg: err });
+    } catch (e) {
+      return res.status(400).json({ msg: e });
     }
   },
 );
