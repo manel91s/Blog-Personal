@@ -9,7 +9,11 @@ const postSchema = new Schema<IPost>({
   image: { type: String, required: true },
   slug: { type: String },
   public: { type: Boolean },
+  tags: [
+    { type: Schema.Types.ObjectId, ref: 'Tag' },
+  ],
   id_user: { type: Schema.Types.ObjectId, ref: 'User' },
+  id_category: { type: Schema.Types.ObjectId, ref: 'Category' },
 }, {
   timestamps: true,
 });

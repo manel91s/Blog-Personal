@@ -30,11 +30,17 @@ export interface IPost {
     slug: string,
     image: string,
     public: boolean,
+    tags: Array,
     id_user: number,
     id_category: number
 }
 
 export interface ICategory {
+    update: any;
+    name: string
+}
+
+export interface ITag {
     name: string
 }
 

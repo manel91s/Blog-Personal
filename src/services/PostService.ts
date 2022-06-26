@@ -4,18 +4,18 @@ import { IPost } from '../types/types';
 class PostService {
   private post: IPost | any;
 
-  private posts: IPost | any;
+  private posts: IPost[] | any;
 
   public async save(postDTO: IPost) {
-    this.post = new Post(postDTO);
+    const post = new Post(postDTO);
 
-    const post = await this.post.save();
+    this.post = await post.save();
 
-    return { post };
+    return this.post;
   }
 
   public async update(post: IPost) {
-    post.save();
+    this.post = post.update();
   }
 
   public async getAll() {

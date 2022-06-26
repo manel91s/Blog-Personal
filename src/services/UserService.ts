@@ -4,8 +4,6 @@ import { IUser, infoMailer } from '../types/types';
 import { generateId } from '../utils/generator';
 
 class UserService {
-  private userRecord! : IUser | any;
-
   private user : IUser | any;
 
   private mailer;
@@ -15,13 +13,13 @@ class UserService {
   }
 
   public async register(userDTO : IUser) {
-    this.userRecord = new User(userDTO);
+    const user = new User(userDTO);
 
-    this.userRecord.token = generateId();
+    user.token = generateId();
 
-    const user = await this.userRecord.save();
+    this.user = await this.user.save();
 
-    return { user };
+    return this.user;
   }
 
   public async generateToken() {
@@ -32,7 +30,7 @@ class UserService {
   }
 
   public async update(user: IUser) {
-    user.save();
+    this.user = await user.update();
   }
 
   public async updateToken(token: string) {
@@ -40,14 +38,15 @@ class UserService {
       confirm: true,
       token: '',
     };
-    // Actualizamos si user no está en memoria
+    // Si el user no está en memoria buscamos y actualizamos
     if (!this.user) {
       return await User.findOneAndUpdate({ token }, update);
     }
 
-    this.user.confirm = update.confirm;
-    this.user.token = update.token;
-    this.user.update();
+    this.user = update.confirm;
+    this.user = update.token;
+
+    await this.user.save();
   }
 
   public async getUser(email: string) {
@@ -67,9 +66,9 @@ class UserService {
   }
 
   public async checkPassword(email:string, password: string) {
-    const userRegistered = await User.findOne({ email });
+    this.user = await User.findOne({ email });
 
-    return userRegistered?.checkPassword(password);
+    return this.user?.checkPassword(password);
   }
 }
 

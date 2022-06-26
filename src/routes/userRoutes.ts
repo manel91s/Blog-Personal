@@ -137,7 +137,8 @@ router.post(
 
 router.patch(
   '/restore-password',
-  [body('newPassword').isLength({ min: 8, max: 16 }).withMessage('El campo password tiene que tener entre 8 y 16 caracteres'),
+  [
+    body('newPassword').isLength({ min: 8, max: 16 }).withMessage('El campo password tiene que tener entre 8 y 16 caracteres'),
     body('passwordConfirmation').custom((value, { req }) => {
       if (value !== req.body.newPassword) {
         throw new Error('La contraseña de confirmación es incorrecta');
@@ -162,7 +163,7 @@ router.patch(
       user.password = newPassword;
       userService.update(user);
 
-      return res.status(200).json({ msg: 'Usuario actualizado' });
+      return res.status(200).json({ msg: 'Se ha enviado un email de confirmación' });
     } catch (e) {
       return res.status(400).json({ msg: e });
     }
