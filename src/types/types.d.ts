@@ -31,8 +31,8 @@ export interface IPost {
     image: string,
     public: boolean,
     tags: Array,
-    id_user: number,
-    id_category: number
+    id_user: string,
+    id_category: string
 }
 
 export interface ICategory {
@@ -42,6 +42,7 @@ export interface ICategory {
 }
 
 export interface ITag {
+    save(): any;
     name: string
 }
 

@@ -52,7 +52,7 @@ router.post(
 
       const postService = new PostService();
 
-      const { post } = await postService.save(postDTO);
+      const post = await postService.save(postDTO);
 
       return res.status(200).json({ post });
     } catch (e) {

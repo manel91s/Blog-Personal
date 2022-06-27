@@ -20,7 +20,7 @@ class PostService {
   }
 
   public async getAll() {
-    this.posts = await Post.find({}).sort({ _id: 'desc' }).populate('id_user');
+    this.posts = await Post.find({}).sort({ _id: 'desc' }).populate('id_user').populate('id_category');
 
     return this.posts;
   }

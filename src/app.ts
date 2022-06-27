@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes';
 import postRoutes from './routes/postRoutes';
 import categoryRoutes from './routes/categoryRoutes';
+import tagRoutes from './routes/tagRoutes';
 import connectDB from './config/db';
 
 dotenv.config();
@@ -20,6 +21,7 @@ connectDB();
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/tags', tagRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el servidor ${PORT}`);

@@ -30,6 +30,11 @@ class CategoryService {
     this.category = await Category.findOne({ _id });
     return this.category;
   }
+
+  public async getCategoryByName(name: string) {
+    this.category = await Category.findOne({ name });
+    return this.category;
+  }
 }
 
 export default CategoryService;
