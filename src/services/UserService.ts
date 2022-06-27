@@ -30,7 +30,8 @@ class UserService {
   }
 
   public async update(user: IUser) {
-    this.user = await user.update();
+    this.user = await user.save();
+    return this.user;
   }
 
   public async updateToken(token: string) {

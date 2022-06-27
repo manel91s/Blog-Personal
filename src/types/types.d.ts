@@ -36,6 +36,7 @@ export interface IPost {
 }
 
 export interface ICategory {
+    save(): any;
     update: any;
     name: string
 }

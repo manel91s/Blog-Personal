@@ -22,12 +22,34 @@ router.post('/save', checkAuth, [body('name').notEmpty().trim().withMessage('El 
     const categoryDTO = req.body;
 
     const categoryService = new CategoryService();
+    console.log(Object.keys(categoryDTO));
 
     if (await categoryService.getCategoryBy(categoryDTO.name)) {
       const error = new Error('El nombre de la categoria ya existe');
       return res.status(400).json({ msg: error.message });
     }
     const category = await categoryService.save(categoryDTO);
+
+    return res.status(200).json({ category });
+  } catch (e) {
+    res.status(400).json({ e });
+  }
+});
+
+router.post('/update/:id', checkAuth, [body('name').notEmpty().trim().withMessage('El nombre de la categoría no puede estar vacio')], async (req: any, res: express.Response) => {
+  try {
+    const { id } = req.params;
+    const categoryDTO = req.body;
+
+    const categoryService = new CategoryService();
+    const categoryExists = await categoryService.getCategoryBy(id);
+
+    if (categoryExists.name.toLowerCase() === categoryDTO.name.toLowerCase()) {
+      const error = new Error('El nombre de la categoria ya existe');
+      return res.status(400).json({ msg: error.message });
+    }
+    categoryExists.name = categoryDTO.name;
+    const category = await categoryService.update(categoryExists);
 
     return res.status(200).json({ category });
   } catch (e) {

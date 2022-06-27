@@ -15,7 +15,9 @@ class CategoryService {
   }
 
   public async update(category: ICategory) {
-    this.category = await category.update();
+    this.category = await category.save();
+
+    return this.category;
   }
 
   public async getAll() {
@@ -24,8 +26,8 @@ class CategoryService {
     return this.categories;
   }
 
-  public async getCategoryBy(name: string) {
-    this.category = await Category.findOne({ name });
+  public async getCategoryBy(_id: string) {
+    this.category = await Category.findOne({ _id });
     return this.category;
   }
 }
