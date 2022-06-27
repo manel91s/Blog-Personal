@@ -10,8 +10,7 @@ const postSchema = new Schema<IPost>({
   slug: { type: String },
   public: { type: Boolean },
   tags: [
-    { type: Schema.Types.ObjectId, ref: 'Tag' },
-  ],
+    { type: Schema.Types.ObjectId, ref: 'Tag' }],
   id_user: { type: Schema.Types.ObjectId, ref: 'User' },
   id_category: { type: Schema.Types.ObjectId, ref: 'Category' },
 }, {
