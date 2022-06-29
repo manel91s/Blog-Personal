@@ -22,6 +22,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/tags', tagRoutes);
+//app.use('/api/comment', commentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el servidor ${PORT}`);

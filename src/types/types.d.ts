@@ -46,6 +46,13 @@ export interface ITag {
     name: string
 }
 
+export interface IComment{
+    body: string,
+    id_user: string,
+    id_post: string
+}
+
 export interface jwtIdPayload extends JwtPayload{
     id: string
   }
+

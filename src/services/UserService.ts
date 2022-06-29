@@ -12,57 +12,41 @@ class UserService {
     this.mailer = new Mailer();
   }
 
-  public async register(userDTO : IUser) {
+  public register(userDTO : IUser) {
     const user = new User(userDTO);
-
     user.token = generateId();
-
-    this.user = await this.user.save();
-
-    return this.user;
+    return user.save();
   }
 
-  public async generateToken() {
-    this.user.confirm = false;
-    this.user.token = generateId();
+  public generateToken(user: IUser) {
+    user.confirm = false;
+    user.token = generateId();
     // eslint-disable-next-line no-return-await
-    return await this.user.save();
+    return user.save();
   }
 
-  public async update(user: IUser) {
-    this.user = await user.save();
-    return this.user;
+  public update(user: IUser) {
+    return user.save();
+    
   }
 
-  public async updateToken(token: string) {
+  public updateToken(token: string) {
     const update = {
       confirm: true,
       token: '',
     };
-    // Si el user no está en memoria buscamos y actualizamos
-    if (!this.user) {
-      return await User.findOneAndUpdate({ token }, update);
-    }
-
-    this.user = update.confirm;
-    this.user = update.token;
-
-    await this.user.save();
+    return User.findOneAndUpdate({ token }, update);
   }
 
-  public async getUser(email: string) {
-    this.user = await User.findOne({ email });
-
-    return this.user;
+  public getUser(email: string) {
+    return User.findOne({ email });
   }
 
-  public async verify(token: string) {
-    this.user = await User.findOne({ token });
-
-    return this.user;
+  public verify(token: string) {
+    return User.findOne({ token });
   }
 
-  public async sendToken(data: infoMailer) {
+  public sendToken(data: infoMailer) {
     this.mailer.sendToken(data);
   }
 

@@ -2,38 +2,26 @@ import { ICategory } from '../types/types';
 import Category from '../models/Category';
 
 class CategoryService {
-  private category: ICategory | any;
 
-  private categories: ICategory[] | any;
-
-  public async save(categoryDTO: ICategory) {
+  public save(categoryDTO: ICategory) {
     const category = new Category(categoryDTO);
-
-    this.category = await category.save();
-
-    return this.category;
+    return category.save();
   }
 
-  public async update(category: ICategory) {
-    this.category = await category.save();
-
-    return this.category;
+  public update(category: ICategory) {
+    return category.save();
   }
 
-  public async getAll() {
-    this.categories = await Category.find({}).sort({ _id: 'desc' });
-
-    return this.categories;
+  public getAll() {
+    return Category.find({}).sort({ _id: 'desc' });
   }
 
-  public async getCategoryBy(_id: string) {
-    this.category = await Category.findOne({ _id });
-    return this.category;
+  public getCategoryBy(_id: string) {
+    return Category.findOne({ _id });
   }
 
-  public async getCategoryByName(name: string) {
-    this.category = await Category.findOne({ name });
-    return this.category;
+  public getCategoryByName(name: string) {
+    return Category.findOne({ name });
   }
 }
 

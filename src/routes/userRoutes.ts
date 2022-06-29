@@ -34,7 +34,7 @@ router.post(
 
       const userService = new UserService();
 
-      const { user } = await userService.register(userDTO);
+      const user = await userService.register(userDTO);
 
       await userService.sendToken({
         email: user.email,
@@ -121,7 +121,7 @@ router.post(
         const error = new Error('El email no existe en la base de datos');
         return res.status(400).json({ msg: error.message });
       }
-      await userService.generateToken();
+      await userService.generateToken(user);
 
       await userService.sendToken({
         email: user.email,
@@ -149,22 +149,25 @@ router.patch(
   async (req: express.Request, res: express.Response) => {
     try {
       const { token, newPassword } = req.body;
-
+      
       const userService = new UserService();
 
       const user = await userService.verify(token);
-
+      
       if (!user) {
         const error = new Error('No se pudo restablecer la contraseña');
         return res.status(400).json({ msg: error.message });
       }
+      
       await userService.updateToken(token);
-
+      console.log("test");
+     
       user.password = newPassword;
       userService.update(user);
 
-      return res.status(200).json({ msg: 'Se ha enviado un email de confirmación' });
+      return res.status(200).json({ msg: 'Se ha cambiado la contrase�a correctamente' });
     } catch (e) {
+      console.log(e);
       return res.status(400).json({ msg: e });
     }
   },
