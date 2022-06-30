@@ -19,12 +19,9 @@ class PostService {
   }
 
   public getPostBySlug(slug : string) {
-    return Post.findOne({ slug });
+    return Post.findOne({ slug }).populate('tags').populate({path: 'comments', populate: { path: 'id_user'}})
   }
 
-  public getComments() {
-
-  }
 }
 
 export default PostService;
