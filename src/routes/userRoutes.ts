@@ -69,12 +69,17 @@ router.put(
   async (req: any, res: express.Response) => {
     try {
       const { user } = req;
-      const { name, surname, newPassword } = req.body;
+      const { name, surname, selectPrivate, newPassword } = req.body;
 
       user.name = name;
       user.surname = surname;
+      
       if (newPassword) {
         user.password = newPassword;
+      }
+
+      if(selectPrivate) {
+        user.private = true;
       }
 
       const userService = new UserService();
