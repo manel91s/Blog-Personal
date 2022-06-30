@@ -3,6 +3,7 @@ import { IPost } from '../types/types';
 
 class PostService {
 
+
   public save(postDTO: IPost) {
     const post = new Post(postDTO);
     return post.save();    
@@ -17,8 +18,12 @@ class PostService {
       .populate('tags');
   }
 
-  public get(slug : string) {
+  public getPostBySlug(slug : string) {
     return Post.findOne({ slug });
+  }
+
+  public getComments() {
+
   }
 }
 

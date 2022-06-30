@@ -160,8 +160,7 @@ router.patch(
       }
       
       await userService.updateToken(token);
-      console.log("test");
-     
+  
       user.password = newPassword;
       userService.update(user);
 

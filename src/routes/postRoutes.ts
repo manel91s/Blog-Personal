@@ -27,7 +27,8 @@ router.get('/:slug', checkAuth, async (req: any, res: express.Response) => {
 
     const postService = new PostService();
 
-    const post = await postService.get(slug);
+    const post = await postService.getPostBySlug(slug);
+    
 
     return res.status(200).json({ post });
   } catch (e) {

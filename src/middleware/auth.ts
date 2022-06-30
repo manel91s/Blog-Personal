@@ -8,6 +8,7 @@ dotenv.config();
 
 const checkAuth = async (req: any, res: express.Response, next: () => void) => {
   let token;
+  
   // Si hay token en los headers:
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
@@ -17,7 +18,7 @@ const checkAuth = async (req: any, res: express.Response, next: () => void) => {
       const { id } = jwt.verify(token, `${process.env.JWT_SECRET}`) as jwtIdPayload;
 
       req.user = await User.findById(id).select('-password -confirmado -token -createdAt -updatedAt');
-
+      
       return next();
     } catch (error) {
       return res.status(404).json({ msg: 'Hubo un error' });

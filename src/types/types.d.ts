@@ -32,13 +32,14 @@ export interface IPost {
     public: boolean,
     tags: Array,
     id_user: string,
-    id_category: string
+    id_category: string,
+    comments: Array
 }
 
 export interface ICategory {
     save(): any;
     update: any;
-    name: string
+    name: string,
 }
 
 export interface ITag {

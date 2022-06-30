@@ -16,11 +16,11 @@ class TagService {
     return Tag.find({}).sort({ _id: 'desc' });
   }
 
-  public getTagBy(_id: string) {
+  public getTagBy(_id: string) : ITag | any{
     return Tag.findOne({ _id });
   }
 
-  public getTagByName(name: string) {
+  public getTagByName(name: string) : ITag | any {
     return Tag.findOne({ name });
   }
 }

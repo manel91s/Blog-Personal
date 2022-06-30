@@ -13,13 +13,16 @@ const postSchema = new Schema<IPost>({
     { type: Schema.Types.ObjectId, ref: 'Tag' }],
   id_user: { type: Schema.Types.ObjectId, ref: 'User' },
   id_category: { type: Schema.Types.ObjectId, ref: 'Category' },
+  comments: [
+    { type: Schema.Types.ObjectId, ref: 'Comment' } 
+  ],
 }, {
   timestamps: true,
 });
 
 postSchema.pre('save', async function (next) {
   if (!this.isModified('slug')) {
-    next();
+    return next();
   }
   this.slug = `${slug(this.title, '-')}_${shortid.generate()}`;
 });

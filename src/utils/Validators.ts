@@ -56,7 +56,7 @@ const validateToken = async (req: any, res:any, next:any) => {
 
 const authUserValidation = async (req: any, res:any, next:any) => {
   const { email, password } = req.body;
-
+  console.log()
   const errors = await getValidationResult(req, res, next);
 
   if (!errors.isEmpty()) {
@@ -93,7 +93,7 @@ const canUpdatePost = async (req:any, res: any, next:any) => {
   const { slug } = req.body;
   const { _id } = req.user;
   const post = await Post.findOne({ slug });
-
+ 
   if (!post) {
     const error = new Error('Esta publicación no existe');
     return res.status(400).json({ msg: error.message });

@@ -16,7 +16,7 @@ class CategoryService {
     return Category.find({}).sort({ _id: 'desc' });
   }
 
-  public getCategoryBy(_id: string) {
+  public getCategoryBy(_id: string) : ICategory | any {
     return Category.findOne({ _id });
   }
 

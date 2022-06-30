@@ -43,7 +43,7 @@ router.put('/update/:id', checkAuth, [body('name').notEmpty().trim().withMessage
     const categoryService = new CategoryService();
     const categoryExists = await categoryService.getCategoryBy(id);
 
-    if (categoryExists.name.toLowerCase() === categoryDTO.name.toLowerCase()) {
+    if (categoryExists && categoryExists.name.toLowerCase() === categoryDTO.name.toLowerCase()) {
       const error = new Error('El nombre de la categoria ya existe');
       return res.status(400).json({ msg: error.message });
     }
