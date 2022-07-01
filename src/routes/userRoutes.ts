@@ -71,17 +71,12 @@ router.put(
       const { user } = req;
       const { name, surname, selectPrivate, newPassword } = req.body;
 
-      user.name = name;
-      user.surname = surname;
+      user.name     = name;
+      user.surname  = surname;
+
+      user.password = newPassword   ?? user.password;
+      user.private  = selectPrivate ?? user.private;
       
-      if (newPassword) {
-        user.password = newPassword;
-      }
-
-      if(selectPrivate) {
-        user.private = true;
-      }
-
       const userService = new UserService();
       userService.update(user);
 
