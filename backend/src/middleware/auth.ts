@@ -17,7 +17,7 @@ const checkAuth = async (req: any, res: express.Response, next: () => void) => {
 
       const { id } = jwt.verify(token, `${process.env.JWT_SECRET}`) as jwtIdPayload;
 
-      req.user = await User.findById(id).select('-password -confirmado -token -createdAt -updatedAt');
+      req.user = await User.findById(id).select('-confirmado -token -createdAt -updatedAt');
       
       return next();
     } catch (error) {

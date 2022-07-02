@@ -8,9 +8,5 @@ class CommentService {
     return comment.save();    
   }
 
-  public getComments() {
-
-  }
-
 }
 export default CommentService;

@@ -53,7 +53,11 @@ export interface IComment{
     id_post: string
 }
 
+export interface IRol {
+    name: string
+}
+
 export interface jwtIdPayload extends JwtPayload{
     id: string
-  }
+}
 

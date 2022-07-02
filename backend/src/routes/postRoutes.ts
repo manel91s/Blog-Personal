@@ -29,7 +29,6 @@ router.get('/:slug', checkAuth, async (req: any, res: express.Response) => {
 
     const post = await postService.getPostBySlug(slug);
     
-
     return res.status(200).json({ post });
   } catch (e) {
     res.status(400).json({ e });
@@ -79,7 +78,7 @@ router.put(
 
       post.title = title;
       post.body = body;
-
+      
       const postService = new PostService();
 
       postService.update(post);

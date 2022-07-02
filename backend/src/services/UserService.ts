@@ -21,7 +21,6 @@ class UserService {
   public generateToken(user: IUser) {
     user.confirm = false;
     user.token = generateId();
-    // eslint-disable-next-line no-return-await
     return user.save();
   }
 

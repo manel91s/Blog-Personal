@@ -14,7 +14,7 @@ const userSchema = new Schema<IUser>({
   token: { type: String },
   confirm: { type: Boolean, default: false },
   private: { type: Boolean, default: false },
-  id_rol: { type: Number },
+  id_rol: { type: Schema.Types.ObjectId, ref: 'Rol'},
 }, {
   timestamps: true,
 });

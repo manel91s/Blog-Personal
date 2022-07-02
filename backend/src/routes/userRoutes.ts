@@ -69,7 +69,7 @@ router.put(
   async (req: any, res: express.Response) => {
     try {
       const { user } = req;
-      const { name, surname, selectPrivate, newPassword } = req.body;
+      const { name, surname, selectPrivate, newPassword, id_rol } = req.body;
 
       user.name     = name;
       user.surname  = surname;
