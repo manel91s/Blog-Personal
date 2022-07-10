@@ -31,17 +31,17 @@ router.post(
   async (req: express.Request, res: express.Response) => {
     try {
       const userDTO = req.body;
-
+      
       const userService = new UserService();
 
       const user = await userService.register(userDTO);
 
       await userService.sendToken({
         email: user.email,
-        confirmURL: `http://${req.hostname}/users/confirm/${user.token}`,
+        confirmURL: `http://${req.hostname}:3000/confirmar/${user.token}`,
       });
 
-      return res.status(200).json({ msg: 'Se ha enviado un email de confirmación' });
+      return res.status(200).json({ msg: 'Usuario Creado Correctamente, Se ha enviado un email de confirmación' });
     } catch (e) {
       return res.status(400).json({ msg: e });
     }
@@ -164,7 +164,7 @@ router.patch(
       user.password = newPassword;
       userService.update(user);
 
-      return res.status(200).json({ msg: 'Se ha cambiado la contrase�a correctamente' });
+      return res.status(200).json({ msg: 'Se ha cambiado la contrase�a correctamente' });
     } catch (e) {
       console.log(e);
       return res.status(400).json({ msg: e });

@@ -16,6 +16,7 @@ const validateParams = async (req: any, res:any, next:any) => {
 };
 
 const userValidation = async (req: any, res:any, next:any) => {
+ 
   const errors = await getValidationResult(req, res, next);
 
   if (!errors.isEmpty()) {
@@ -24,24 +25,19 @@ const userValidation = async (req: any, res:any, next:any) => {
 
   const { email } = req.body;
 
-  try {
-    const userRegistered = await User.findOne({ email });
+  const userRegistered = await User.findOne({ email });
 
-    if (userRegistered) {
-      const error = new Error('El email ya existe en la base de datos');
-      return res.status(400).json({ msg: error.message });
-    }
-  } catch (e) {
-    res.status(400).json({ e });
+  if (userRegistered) {
+    const error = new Error('El email ya existe en la base de datos');
+    return res.status(400).json({ msg: error.message });
   }
-
+  
   return next();
 };
 
 const validateToken = async (req: any, res:any, next:any) => {
-  const { token } = req.params;
+    const { token } = req.params;
 
-  try {
     const isValidToken = await User.findOne({ token });
 
     if (isValidToken) {
@@ -49,9 +45,7 @@ const validateToken = async (req: any, res:any, next:any) => {
     }
     const error = new Error('El token no es valido');
     return res.status(400).json({ msg: error.message });
-  } catch (e) {
-    res.status(400).json({ e });
-  }
+  
 };
 
 const authUserValidation = async (req: any, res:any, next:any) => {
@@ -59,11 +53,10 @@ const authUserValidation = async (req: any, res:any, next:any) => {
   console.log()
   const errors = await getValidationResult(req, res, next);
 
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-  try {
     const userRegistered = await User.findOne({ email });
 
     if (!userRegistered) {
@@ -82,9 +75,7 @@ const authUserValidation = async (req: any, res:any, next:any) => {
     }
     
     req.user = userRegistered;
-  } catch (e) {
-    res.status(400).json({ e });
-  }
+ 
 
   return next();
 };
