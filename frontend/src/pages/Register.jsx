@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const Register = () => {
 
-  const [user, setUser ] = useState({name: '', surname: '', email:'', password: '', password2: ''});
+  const [user, setUser ] = useState({name: '', surname: '', email:'', password: '', passwordConfirmation: ''});
   const [alert, setAlert ] = useState('');
 
   const handleChange = (e) => {
@@ -17,9 +17,9 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const {name, surname, email, password, password2 } = user;
+    const {name, surname, email, password, passwordConfirmation } = user;
 
-    if([name, surname, email, password, password2].includes('')) {
+    if([name, surname, email, password, passwordConfirmation].includes('')) {
       setAlert({
         msg: 'Todos los campos son obligatorios',
         error: true
@@ -27,7 +27,7 @@ const Register = () => {
      return;
     }
 
-    if(password !== password2) {
+    if(password !== passwordConfirmation) {
       setAlert({
         msg: 'Las contraseñas introducidas no coincidien',
         error: true
@@ -43,20 +43,40 @@ const Register = () => {
      return;
     }
 
-    setAlert({})
-
+    setAlert({
+      name: '',
+      surname: '',
+      email: '',
+      password: '',
+      passwordConfirmation: ''
+    })
+   
     //Create user in API
     try {
-      const response = await fetch(`http://${location.hostname}:4000/`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users`, {
         method:'POST',
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       })
 
-      const msg = await response.json();
+      const data  = await response.json();
 
-      console.log(msg);
-    } catch(e){
-      console.log(e);
+      if(response.ok) {
+        setAlert({
+          msg: data.msg,
+          error: false
+        })
+        setUser({name:'', surname: '', email: '', password: '', passwordConfirmation: ''} ) 
+        return;
+      }
+      throw new Error(data.msg)
+    } catch(error){
+      setAlert({
+        msg: error.message,
+        error: true
+      })
     }
   
   }
@@ -130,6 +150,7 @@ const Register = () => {
           
         <input 
         onChange={handleChange}
+        value={user.password}
         type="password" 
         placeholder="Password de registro" 
         name="password"
@@ -139,14 +160,15 @@ const Register = () => {
       <div className="my-5">
         <label 
           className="uppercase text-gray-600 block text-xl font-bold"
-          htmlFor="password2"
+          htmlFor="passwordConfirmation"
           >Repetir Password</label>
           
         <input
         onChange={handleChange}
-        id="password2" 
+        value={user.passwordConfirmation}
+        id="passwordConfirmation" 
         type="password"
-        name="password2"
+        name="passwordConfirmation"
         placeholder="Repetir tu Password" 
         className="w-full mt-3 p-3 border rounded-xl bg-gray-50" />
       </div>
