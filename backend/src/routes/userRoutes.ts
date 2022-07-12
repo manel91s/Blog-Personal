@@ -112,7 +112,7 @@ router.post(
   async (req: express.Request, res: express.Response) => {
     try {
       const { email } = req.body;
-
+      console.log(email);
       const userService = new UserService();
 
       const user = await userService.getUser(email);
@@ -125,11 +125,34 @@ router.post(
 
       await userService.sendToken({
         email: user.email,
-        confirmURL: `http://${req.hostname}/users/forgot-password/${user.token}`,
+        confirmURL: `http://${req.hostname}/olvide-password/${user.token}`,
       });
 
       return res.status(200).json({ msg: 'Se ha enviado un email de confirmación' });
     } catch (e) {
+      return res.status(400).json({ msg: e });
+    }
+  },
+);
+
+router.get(
+  '/restore-password/:token',
+  async (req: express.Request, res: express.Response) => {
+    
+    try {
+      const { token } = req.params;
+      
+      const userService = new UserService();
+
+      const isValidToken = await userService.verify(token);
+      
+      if (isValidToken) {
+        return res.status(200).json({ msg: 'Token valido'});
+      }
+      
+      return res.status(404).json({ msg: 'Token no valido' });
+    } catch (e) {
+      console.log(e);
       return res.status(400).json({ msg: e });
     }
   },
@@ -164,7 +187,7 @@ router.patch(
       user.password = newPassword;
       userService.update(user);
 
-      return res.status(200).json({ msg: 'Se ha cambiado la contrase�a correctamente' });
+      return res.status(200).json({ msg: 'Se ha cambiado la contraseña correctamente' });
     } catch (e) {
       console.log(e);
       return res.status(400).json({ msg: e });

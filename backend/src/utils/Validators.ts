@@ -6,6 +6,7 @@ import User from '../models/User';
 const getValidationResult = async (req: any, res:any, next:any) => validationResult(req);
 
 const validateParams = async (req: any, res:any, next:any) => {
+
   const errors = await getValidationResult(req, res, next);
 
   if (!errors.isEmpty()) {

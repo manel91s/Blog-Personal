@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Alert from '../components/Alert';
-import ForgotPassword from './ForgotPassword';
+
 
 const newPassword = () => {
 
@@ -10,10 +10,35 @@ const newPassword = () => {
   const { token } = params;
 
   const [alert, setAlert] = useState({});
+  const [ isValidToken, setIsValidToken ] = useState(false);
 
   const [ forgotPassword, setForgotPassword ] = useState({newPassword : '', passwordConfirmation: ''});
 
   const { newPassword, passwordConfirmation } = forgotPassword;
+ 
+  useEffect(() => {
+    const checkToken = async () => {
+
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/restore-password/${token}`);
+
+        const data = await response.json();
+        console.log(response);
+        if(response.ok) {
+          setIsValidToken(true);
+          return;
+        }
+
+        throw new Error(data.msg)
+      }catch(error) {
+        setAlert({
+          msg: error.message,
+          error: true
+        })
+      }
+    }
+    checkToken();
+  }, [])
   
   const handleSubmit = async e => {
     e.preventDefault();
@@ -41,7 +66,7 @@ const newPassword = () => {
      })
      return;
     }
-    
+
     //add token in the new object
     const newPasswordRequest = {
       ...forgotPassword,
@@ -84,8 +109,10 @@ const newPassword = () => {
     <h1 className="font-black text-6xl capitalize">Reestablece tu password y no pierdas acceso a tus
     <span className="text-slate-700 text-orange-600"> publicaciones</span>
     </h1>
-    {msg && <Alert alert={alert} />} 
-    <form 
+    {msg && <Alert alert={alert} />}
+
+    {isValidToken ? ( 
+      <form 
       onSubmit = {handleSubmit}
       className="my-10 bg-white shadow px-10 py-5"
     >
@@ -125,6 +152,8 @@ const newPassword = () => {
             />
     </form>
 
+    ) : ''}
+    
     <nav 
       className="lg: flex lg:justify-between"
     >
