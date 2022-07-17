@@ -23,7 +23,7 @@ const newPassword = () => {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/restore-password/${token}`);
 
         const data = await response.json();
-        console.log(response);
+        
         if(response.ok) {
           setIsValidToken(true);
           return;
@@ -59,7 +59,7 @@ const newPassword = () => {
       return;
     }
 
-    if(password.length < 8 || password.length > 16) {
+    if(newPassword.length < 8 || newPassword.length > 16) {
       setAlert({
         msg: 'La contraseña tiene que tener entre 8 y 16 caracteres',
         error: true
@@ -159,9 +159,9 @@ const newPassword = () => {
     >
       <Link
         className='block text-center my-5 text-slate-500 uppercase text-sm'
-        to="/registrar"
+        to="/"
       >
-      ¿No tienes una cuenta? Registrate</Link>
+      Iniciar Sesión</Link>
 
       <Link
         className='block text-center my-5 text-slate-500 uppercase text-sm'

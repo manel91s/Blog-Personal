@@ -51,13 +51,15 @@ const validateToken = async (req: any, res:any, next:any) => {
 
 const authUserValidation = async (req: any, res:any, next:any) => {
   const { email, password, id_rol } = req.body;
-  console.log()
+
+  console.log(req.body);
+
   const errors = await getValidationResult(req, res, next);
 
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
+   
     const userRegistered = await User.findOne({ email });
 
     if (!userRegistered) {
