@@ -1,6 +1,63 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Alert from '../components/Alert';
 
 const Login = () => {
+  
+  const [userLogin, setUserLogin] = useState({email:'', password: ''});
+  const [alert, setAlert] = useState({});
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    const { email, password } = userLogin;
+
+    if([email, password].includes('')) {
+      setAlert({
+        msg: 'Todos los campos son obligatorios',
+        error: true
+      })
+
+      return;
+    }
+
+    if(password.length < 8 || password.length > 16) {
+      setAlert({
+        msg: 'La contraseña tiene que tener entre 8 y 16 caracteres',
+        error: true
+     })
+     return;
+    }
+    
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/login`, {
+        method: 'POST',
+        body: JSON.stringify(userLogin),
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      })
+      
+      const data = await response.json();
+
+      if(response.ok) {
+        setAlert({})
+        localStorage.setItem('token', data.token)
+        return;
+      }
+
+      throw new Error(data.msg);
+
+    }catch(error) {
+      setAlert({
+        msg: error.message,
+        error: true
+      })
+    }
+  }
+
+  const { msg } = alert;
+
   return (
     <>
         <h1 className="font-black text-6xl capitalize">Inicia sesión y administra tus
@@ -9,15 +66,21 @@ const Login = () => {
 
         </h1>
 
-        <form className="my-10 bg-white shadow px-10 py-5">
+        {msg && <Alert alert = {alert} />}
+        <form
+        onSubmit={handleSubmit}
+        className="my-10 bg-white shadow px-10 py-5"
+        >
           <div className="my-5">
-            <label 
+            <label
               className="uppercase text-gray-600 block text-xl font-bold"
               htmlFor="email"
               >Email</label>
               
             <input 
+            onChange={(e) => {setUserLogin({...userLogin, [e.target.name] : e.target.value })}}
             type="email" 
+            name="email"
             placeholder="Email de registro" 
             className="w-full mt-3 p-3 border rounded-xl bg-gray-50" />
           </div>
@@ -27,14 +90,16 @@ const Login = () => {
               htmlFor="password"
               >Password</label>
               
-            <input 
-            type="email" 
+            <input
+            onChange={(e) => {setUserLogin({...userLogin, [e.target.name] : e.target.value })}}
+            type="password" 
+            name="password"
             placeholder="Password de registro" 
             className="w-full mt-3 p-3 border rounded-xl bg-gray-50" />
           </div>
 
           <input 
-            type="text" 
+            type="submit" 
             value="Iniciar Sesión"
             className="bg-orange-700 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-orange-800 transition-colors text-center"
             />
