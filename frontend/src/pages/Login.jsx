@@ -1,11 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Alert from '../components/Alert';
+import useAuth from '../hooks/useAuth';
+
+
 
 const Login = () => {
   
   const [userLogin, setUserLogin] = useState({email:'', password: ''});
   const [alert, setAlert] = useState({});
+
+  const { setAuth } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,6 +48,7 @@ const Login = () => {
       if(response.ok) {
         setAlert({})
         localStorage.setItem('token', data.token)
+        setAuth(data);
         return;
       }
 

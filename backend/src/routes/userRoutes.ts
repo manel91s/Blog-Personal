@@ -214,4 +214,14 @@ router.post(
   },
 );
 
+router.get(
+  '/profile',
+  checkAuth,
+  async (req: any, res: express.Response) => {
+    const { user } = req;
+
+    res.json(user);
+  },
+);
+
 export default router;

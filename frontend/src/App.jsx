@@ -9,20 +9,22 @@ import ForgotPassword from './pages/ForgotPassword';
 import NewPassword from './pages/NewPassword';
 import ConfirmAccount from './pages/ConfirmAccount';
 
-console.log(import.meta.env.VITE_BACKEND_URL)
+import {AuthProvider} from './context/authProvider';
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AuthLayout/>}>
-            <Route index element={<Login/>}/>
-            <Route path="registrar" element={<Register/>}/>
-            <Route path="olvide-password" element={<ForgotPassword/>}/>
-            <Route path="olvide-password/:token" element={<NewPassword/>}/>
-            <Route path="confirmar/:token" element={<ConfirmAccount/>}/>
-        </Route>
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<AuthLayout/>}>
+              <Route index element={<Login/>}/>
+              <Route path="registrar" element={<Register/>}/>
+              <Route path="olvide-password" element={<ForgotPassword/>}/>
+              <Route path="olvide-password/:token" element={<NewPassword/>}/>
+              <Route path="confirmar/:token" element={<ConfirmAccount/>}/>
+          </Route>
+        </Routes>
+        </AuthProvider>
     </BrowserRouter>
   )
 }
